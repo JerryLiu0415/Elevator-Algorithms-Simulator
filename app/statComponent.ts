@@ -5,7 +5,7 @@ import {Component, OnInit} from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import {sharedService} from "./sharedService"
 import {Observable} from 'rxjs/Rx';
-var jsonfile = require('jsonfile')
+
 
 
 
