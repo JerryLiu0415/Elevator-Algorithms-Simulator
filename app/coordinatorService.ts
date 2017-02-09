@@ -6,6 +6,7 @@ import {Person} from './person';
 export class coordinatorService {
   public selectElevator(elevators: elevator[], alg: string, p: Person): number {
     var numInService: number = 0;
+    // Indices of elevators in use
     var indices: number[] = [];
     for (var i = 0; i < elevators.length; i++) {
       if (elevators[i].inService) {
@@ -23,6 +24,7 @@ export class coordinatorService {
       return elevators[indices[0]].id;
     }
 
+    // Apply algorithms only when 2 or more elevators in service
     else {
       switch (alg) {
         // Using worst case distance as score to find the most suitable elevator
@@ -83,15 +85,43 @@ export class coordinatorService {
               }
           }
           return scrores.indexOf(min);
+
+        // Randomly assign
         case "RandomAssign":
-          return Math.floor(Math.random() * 3);
-        case "UpperLowerRegion":
-          if (p.src > 10) {
-            return Math.floor(Math.random() * 2);
+          if (numInService == 3) {
+            return Math.floor(Math.random() * 3);
           }
           else {
-            return 2;
+            var rand:number = Math.floor(Math.random() * 2);
+            if (rand == 0) {
+              return indices[0];
+            }
+            else {
+              return indices[1];
+            }
           }
+
+        // Specific elevator responsible for specific region
+        case "UpperLowerRegion":
+          if (numInService == 3) {
+            if (p.src > 10) {
+              return Math.floor(Math.random() * 2);
+            }
+            else {
+              return 2;
+            }
+          }
+          else {
+            if (p.src > 12) {
+              return indices[0];
+            }
+            else {
+              return indices[1];
+            }
+          }
+
+
+        // Assign to the least busy elevator
         case "LeastCalledFirst":
           var sc:number[] = [0,0,0];
           sc[0] = elevators[0].innerCalls.length + elevators[0].outerCallsDown.length+
@@ -102,6 +132,10 @@ export class coordinatorService {
             elevators[2].outerCallsUp.length;
           var min = 50;
           for (var i = 0; i < elevators.length; i++) {
+            // Disable out of serviced ones
+            if (!elevators[i].inService) {
+              sc[i] = 1000;
+            }
             if (sc[i] < min) {
               min = sc[i];
             }

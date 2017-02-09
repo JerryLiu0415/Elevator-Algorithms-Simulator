@@ -21,6 +21,21 @@ import {personService} from "./personService";
                 {{this._sharedService.globalhr.toString() + ":" + this._sharedService.globalmin.toString()
                 + ":" + this._sharedService.globals.toString()}}
              </text>
+             <g *ngFor="let f of floorsW">
+             <text *ngIf="countWaiting(18-floorsW.indexOf(f))>0"
+                x="140" [attr.y]="f" font-family="Verdana" font-size="15">
+             {{"#Waiting "+countWaiting(18-floorsW.indexOf(f))}}
+             </text>
+             <circle r="5" cx="60" 
+             [attr.cy]="this.findPos(this._sharedService.elevators[0].heading)" fill="none"
+             style="stroke:rgb(255, 99, 132);stroke-width:2"></circle>
+             <circle r="5" cx="80" 
+             [attr.cy]="this.findPos(this._sharedService.elevators[1].heading)" fill="none"
+             style="stroke:rgb(54, 162, 235);stroke-width:2"></circle>
+             <circle r="5" cx="100" 
+             [attr.cy]="this.findPos(this._sharedService.elevators[2].heading)" fill="none"
+             style="stroke:rgb(255, 206, 86);stroke-width:2"></circle>
+             </g>
              <line *ngFor="let f of floors"
                   [attr.y1]="f"
                   [attr.y2]="f"
@@ -28,10 +43,23 @@ import {personService} from "./personService";
                   x2="225"
                   style="stroke:rgb(99,99,99);stroke-width:2"
              />
-             <rect *ngFor="let e of elevators"
-                  [attr.y]="this._sharedService.elevators[(e-50)/20].position" 
-                  [attr.x]="e" rx="3" ry="3" width="20" height="20"
-                  style="stroke:rgb(198, 197, 192);stroke-width:2"
+             <rect 
+                  [attr.y]="this._sharedService.elevators[0].position" 
+                  [attr.x]="50" rx="3" ry="3" width="20" height="20"
+                  style="stroke:rgb(255, 99, 132);stroke-width:4"
+          
+             />
+             <rect 
+                  [attr.y]="this._sharedService.elevators[1].position"
+                  [attr.x]="70" rx="3" ry="3" width="20" height="20"
+                  style="stroke:rgb(54, 162, 235);stroke-width:4"
+               
+             />
+             <rect 
+                  [attr.y]="this._sharedService.elevators[2].position" 
+                  [attr.x]="90" rx="3" ry="3" width="20" height="20"
+                  style="stroke:rgb(255, 206, 86);stroke-width:4"
+     
              />
              <line *ngFor="let e of elevatorsRope"
                   [attr.y2]="this._sharedService.elevators[(e-54)/20].position" [attr.x2]="e" [attr.x1]="e" y1="90" 
@@ -268,18 +296,23 @@ import {personService} from "./personService";
   `]
 })
 export class animationComponent implements OnInit {
+  // Binding variables
   floors: string[] =
     ["90", "110",
     "130", "150", "170", "190", "210",
     "230", "250", "270", "290", "310",
     "330", "350", "370", "390", "410",
-    "330", "350", "370", "390", "410",
     "430", "450", "470"];
+  floorsW: string[] =
+    [ "105",
+      "125", "145", "165", "185", "205",
+      "225", "245", "265", "285", "305",
+      "325", "345", "365", "385", "405",
+      "425", "445", "465"];
   btsUp: string[] =
     ["110",
       "130", "150", "170", "190", "210",
       "230", "250", "270", "290", "310",
-      "330", "350", "370", "390", "410",
       "330", "350", "370", "390", "410",
       "430", "450"];
   btsDown: string[] =
@@ -287,13 +320,11 @@ export class animationComponent implements OnInit {
       "130", "150", "170", "190", "210",
       "230", "250", "270", "290", "310",
       "330", "350", "370", "390", "410",
-      "330", "350", "370", "390", "410",
       "430"];
   txts: string[] =
      ["90", "110",
       "130", "150", "170", "190", "210",
       "230", "250", "270", "290", "310",
-      "330", "350", "370", "390", "410",
       "330", "350", "370", "390", "410",
       "430", "450"];
   innerBt1: number[] =
@@ -308,8 +339,6 @@ export class animationComponent implements OnInit {
     ["66", "86", "106"];
   inService: string[] =
     ["normalF", "normalF", "normalF"];
-
-
   name = 'Animation';
   pos:number;
 
@@ -322,12 +351,12 @@ export class animationComponent implements OnInit {
   ngOnInit() {
     this.pos = this._sharedService.pos;
     // Timer that updates the world
-    let timer = Observable.timer(0, 25);
+    let timer = Observable.timer(0, 40);
     timer.subscribe(t => this.update());
 
   }
 
-  // Called
+  // Called every tick
   update() {
     this._sharedService.globals++;
     if (this._sharedService.globals == 60) {
@@ -369,6 +398,7 @@ export class animationComponent implements OnInit {
     }
   }
 
+  // Elevator control UI update
   clcBtnU(ind: number) {
     var selectedInd: number =
       this.cs.selectElevator(this._sharedService.elevators, this._sharedService.currentCoordinator, new Person(ind,ind+1));
@@ -409,10 +439,17 @@ export class animationComponent implements OnInit {
     }
 
   }
+  countWaiting(floor: number) {
+    var res:number = 0;
+    for (let p of this._sharedService.people) {
+      if (p.src == floor && !p.serviced) {
+        res++;
+      }
+    }
+    return res;
+  }
 
-
-
-
+  // Position the components properly
   correction(n: number): number {
     if (n >= 325) {return 5;}
     return 0;
@@ -458,7 +495,6 @@ export class animationComponent implements OnInit {
         return "B";
     }
   }
-
   transCol2(n: number): string {
     switch (n) {
       case 250:
@@ -477,7 +513,6 @@ export class animationComponent implements OnInit {
         return "";
     }
   }
-
   transCol3(n: number): string {
     switch (n) {
       case 250:
@@ -495,6 +530,11 @@ export class animationComponent implements OnInit {
       default:
         return "";
     }
+  }
+
+  // Return position base on floor number
+  public findPos(floor: number): number {
+    return (-20*floor+450)+10;
   }
 
 }

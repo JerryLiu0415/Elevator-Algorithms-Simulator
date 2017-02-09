@@ -5,7 +5,7 @@ import {Component, OnInit} from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import {sharedService} from "./sharedService"
 import {Observable} from 'rxjs/Rx';
-var jsonfile = require('jsonfile')
+//var fs = require('fs');
 
 
 
@@ -24,10 +24,7 @@ var jsonfile = require('jsonfile')
              
              <fieldset>
              <legend>Waiting Distribution</legend>
-             <div>
              <label>General Waiting Histogram</label>
-             <button id="hide" class="btn"  (click)="hideChart(0)">{{bt[0]}}</button>
-             </div>
              <div [attr.class]="hide[0]">
              <chart [type]="type" [data]="data" [options]="options"></chart>
              </div>
@@ -42,9 +39,13 @@ var jsonfile = require('jsonfile')
              </fieldset>
              
              <fieldset>
-             <legend>DatasetComparison</legend>
-             <label>AddDataset</label>
-             <div></div>
+             <legend>Elevaotr useage</legend>
+             <div>
+             <label>Useage between elevators</label>
+             </div>
+             <div [attr.class]="hide[0]">
+             <chart [type]="type3" [data]="data3" [options]="options"></chart>
+             </div>
              </fieldset>
              
              
@@ -88,6 +89,7 @@ export class statComponent implements OnInit{
   bt: string[] = ["Hide", "Hide"];
   hide: string[] = ["N", "N"];
   type = 'bar';
+  type3 = 'pie';
   data = {
   labels: ["0s-10s", "10s-20s", "20s-30s", "30s-40s", "40s-50s", "50s-60s", "60s-70s", "70s<"],
   datasets: [
@@ -104,6 +106,21 @@ export class statComponent implements OnInit{
       {
         label: "Relative Waiting (s/floor)",
         data: [0,0,0,0,0,0,0,0,0,0]
+      }
+    ]
+  };
+
+  data3 = {
+    labels: ["left", "middle", "right"],
+    datasets: [
+      {
+        label: "Elevator useage",
+        data: [0,0,0],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)'
+        ]
       }
     ]
   };
@@ -128,7 +145,18 @@ export class statComponent implements OnInit{
             , this._sharedService.statHist[5].length
             , this._sharedService.statHist[6].length
             , this._sharedService.statHist[7].length
-            , this._sharedService.statHist[8].length]
+            , this._sharedService.statHist[8].length],
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(255, 0, 0, 0.2)'
+          ]
         }
       ]
     }
@@ -148,6 +176,23 @@ export class statComponent implements OnInit{
         }
       ]
     };
+
+    this.data3 = {
+      labels: ["left", "middle", "right"],
+      datasets: [
+        {
+          label: "Elevator useage",
+          data: [this._sharedService.eUseage[0].length,this._sharedService.eUseage[1].length,
+            this._sharedService.eUseage[2].length],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)'
+          ]
+        }
+      ]
+    };
+
   }
 
   hideChart(ind: number) {

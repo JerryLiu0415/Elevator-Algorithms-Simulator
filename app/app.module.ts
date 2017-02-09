@@ -2,6 +2,7 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ChartModule } from '../node_modules/angular2-chartjs';
 
+
 // Components
 import { AppComponent }  from './app.component';
 import { SettingComponent }  from './settingComponent';

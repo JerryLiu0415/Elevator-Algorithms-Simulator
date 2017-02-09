@@ -21,21 +21,13 @@ import {sharedService} from "./sharedService"
                <option value='LeastCalledFirst'>LeastCalledFirst</option>
              </select>
               </div>
-              
-              
-             <div>
-             <label>Local Coordinator: </label>
-             <select>
-               <option value="scan">SCAN(Traditional)</option>
-               <option value="clook">C-LOOK</option>
-             </select>
-             </div>
+             
              
              <div>
              <label>Default Idle Floor: </label>
-             <select>
+             <select #x (change)="callType(x.value,'LC')">
                <option value="none">None(Traditional)</option>
-               <option value="G">G</option>
+               <option value="1">G</option>
                <option value="18">18</option>
                <option value="12">12</option>
              </select>
@@ -54,7 +46,7 @@ import {sharedService} from "./sharedService"
              <div [attr.class]="this.hide">
              <div>
              <label>B:</label>
-             <select #a (change)="updateR(a.value, 0)">
+             <select #a (change)="updateR(a.value, 0)" id="kk">
                <option *ngFor="let o of currentRange0" [attr.value]=o>{{o}}</option>
              </select>
              <label>G:</label>
@@ -275,6 +267,9 @@ export class SettingComponent implements OnInit{
     }
     else if (field == "R") {
       this._sharedService.rate = val;
+    }
+    else if (field == "LC") {
+      this._sharedService.defaultIdleFloor = val;
     }
   }
 

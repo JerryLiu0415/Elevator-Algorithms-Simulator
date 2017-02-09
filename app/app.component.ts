@@ -14,4 +14,4 @@ import {SettingComponent} from "./settingComponent"
   providers: [sharedService],
   //directives: [controlComponent, animationComponent, SettingComponent]
 })
-export class AppComponent  { name:string = "Elevator Simulator"; }
+export class AppComponent  { name:string = "Elevator system and algorithms simulator"; }

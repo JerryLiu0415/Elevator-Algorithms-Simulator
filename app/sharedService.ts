@@ -8,18 +8,24 @@ import {Person} from './person'
 @Injectable()
 export class sharedService {
 
+  // Stat
   statHist: number[][] = [[],[],[],[],[],[],[],[],[]];
   relaHist: number[][] = [[],[],[],[],[],[],[],[]];
   dataSet: any = {
     "globalAlg" : this.currentCoordinator,
     "servicedPeople": []
   };
+  eUseage: number[][] = [[],[],[]];
 
+
+
+  // Clock
   clockRate: number = 50;
   globals: number = 0;
   globalmin: number = 0;
   globalhr: number = 0;
 
+  // Default settings
   start: boolean = true;
   eSpeeds: number[] = [0.5, 0.5, 0.5];
   pos: number = 430;
@@ -30,6 +36,8 @@ export class sharedService {
   elevators: elevator[] = [new elevator(0), new elevator(1), new elevator(2)];
   people: Person[] = [];
   currentCoordinator: string = "ConvenientFirst";
+  currentLocalCoordinator: string = "scan";
+  defaultIdleFloor: string = "none";
   OUBS: string[] =
     [ "normal", "normal",
       "normal", "normal", "normal", "normal", "normal",
@@ -84,6 +92,13 @@ export class sharedService {
       }
       if (i+1 <= rela && rela < i+2) {
         this.relaHist[i].push(rela);
+      }
+    }
+
+    // Updating elevator useage
+    for (var i = 0; i < 3; i++) {
+      if (p.at == i){
+        this.eUseage[i].push(0);
       }
     }
 
