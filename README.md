@@ -6,5 +6,9 @@
   ![alt tag](https://github.com/JerryLiu0415/Elevator-Algorithms-Simulator/blob/master/screen%20captures/setting.jpeg)
   
   ![alt tag](https://github.com/JerryLiu0415/Elevator-Algorithms-Simulator/blob/master/screen%20captures/animation.jpeg)
+  
+  ![alt tag](https://github.com/JerryLiu0415/Elevator-Algorithms-Simulator/blob/master/screen%20captures/stat.jpeg)
+    
+  ![alt tag](https://github.com/JerryLiu0415/Elevator-Algorithms-Simulator/blob/master/screen%20captures/stat2.jpeg)
  
   
